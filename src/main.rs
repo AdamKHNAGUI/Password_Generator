@@ -1,4 +1,4 @@
-use rand::{distributions::Alphanumeric, Rng}; //lib pour générer des valeurs aléatoires
+use rand::Rng; //lib pour générer des valeurs aléatoires
 use std::env;
 
 fn main() {
@@ -10,12 +10,17 @@ fn main() {
     } else {
         12
     };
+    //tout les caractères utilisé pour la génération
+    let charset: Vec<char> = "abcdefghijklmnopqrstuvwxyz\
+ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+0123456789!@#$%^&*()-_=+[]{};:,.<>?/|"
+        .chars()
+        .collect();
 
-    let password: String = rand::thread_rng()          //générateur aléatoire sécurisé pour le thread courant
-        .sample_iter(&Alphanumeric) //crée un flux de caractères alphanumériques
-        .take(length)               //garder le nombre de caractère demandé
-        .map(char::from)           //convertit chaque bit en caractère
-        .collect();                                    //récupère tous les caractères dans la variable String
+    let mut rng = rand::thread_rng();                                               //générateur aléatoire sécurisé pour le thread courant
+    let password: String = (0..length)                                                     //crée un itérateur sur length
+        .map(|_| charset[rng.gen_range(0..charset.len())])//récupère un caractère aléatoire dans charset,
+        .collect();                                                                           //récupère tous les caractères dans la variable String
 
     println!("Mot de passe généré: {}", password);
 }
